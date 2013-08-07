@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ncstudy#05 ハンズオン資料</title>
+    
+    <meta name="author" content="Name Lastname">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/twitter/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+
+    <!-- atom & rss feed -->
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="/rss.xml" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+  </head>
+
+  <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="http://cloud.nifty.com"><img src="https://cloud.nifty.com/images/cloud_logo.gif"></a>
+          <ul class="nav">
+            <li><a href="http://ncstudy.on.coocan.jp/">ncstudy トップ</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>ncstudy#05 ハンズオン資料  <small>2013/07/14</small></h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <p>講師：<a href='https://github.com/tily'>@tily</a></p>
+
+<p>Chef Apply と Chef Solo と serverspec とニフティクラウドとニフティクラウドオートメーションβが試せるお得なハンズオンです。</p>
+<hr />
+<h2 id='0_'>0. 目次</h2>
+<ul>
+  <li>
+    <a href='#1_'>1. 準備</a>
+    <ul>
+      <li><a href='#11_ssh_'>1.1. SSH でサーバーへログイン</a></li>
+      <li><a href='#12_chef_solo_'>1.2. Chef Solo のインストール</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href='#2_chef_apply_'>2. Chef Apply を試す</a>
+    <ul>
+      <li><a href='#21_chef_apply_'>2.1. Chef Apply とは</a></li>
+      <li><a href='#22_'>2.2. レシピの作成と実行</a></li>
+      <li><a href='#23_'>2.3. べき等性の確認</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href='#3_chef_solo__wordpress_'>3. Chef Solo で WordPress レシピ開発</a>
+    <ul>
+      <li><a href='#31_chef_solo_'>3.1. Chef Solo 用の設定ファイル配置</a></li>
+      <li><a href='#32_wordpress_'>3.2. WordPress レシピのダウンロード</a></li>
+      <li><a href='#33_'>3.3. レシピ実行</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href='#4_'>4. レシピのテストを書く</a>
+    <ul>
+      <li><a href='#41_serverspec_'>4.1. serverspec のインストール</a></li>
+      <li><a href='#42_httpd_'>4.2. httpd のテストを修正</a></li>
+      <li><a href='#43_mysqld_'>4.3. mysql のテストを作成</a></li>
+      <li><a href='#44_wordpress_'>4.4. wordpress のテストを作成</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href='#5_cloudautomation__'>5. CloudAutomation β で自動化！</a>
+    <ul>
+      <li><a href='#51_'>5.1. レシピのアップロード</a></li>
+      <li><a href='#52_json_'>5.2. JSON ファイル作成</a></li>
+      <li><a href='#53_'>5.3. コントロールパネルから実行</a></li>
+    </ul>
+  </li>
+</ul>
+<h2 id='1_'>1. 準備</h2>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='11_ssh_'>1.1. SSH でサーバーへログイン</h3>
+<ol>
+  <li> TeraTerm を起動</li>
+  <li> 「ホスト」に当日配布の IP アドレスを入力</li>
+  <li> 「TCP ポート」に "22" を入力</li>
+  <li> 「OK」ボタンをクリック (次の画面が表示されます)</li>
+  <li> 「ユーザ名」に "root" を入力</li>
+  <li> 「パスフレーズ」に当日配布のパスフレーズを入力</li>
+  <li> 「RSA/DSA 鍵を使う」を選択し「秘密鍵」ボタンから当日配布する秘密鍵を指定</li>
+  <li> 「OK」ボタンをクリック</li>
+</ol>
+<p>下記のようなプロンプトが表示されればログイン成功です。</p>
+
+<pre><code>[root@devopschf001 ~]#</code></pre>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='12_chef_solo_'>1.2. Chef Solo のインストール</h3>
+
+<p>下記コマンドで一発でインストールすることができます。</p>
+
+<pre><code># curl -L https://www.opscode.com/chef/install.sh | bash</code></pre>
+
+<p>ちなみにバージョンを固定したい場合は -v で指定したり RPM から直接インストールすることも可能です。</p>
+
+<pre><code># bash install.sh -v 11.4.4.-2
+# rpm -ivh https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chef-11.4.4-2.el6.x86_64.rpm</code></pre>
+
+<p>正常にインストールが完了したかどうか chef-solo コマンドで確認してみましょう。</p>
+
+<pre><code># chef-solo
+[2013-07-09T17:15:39+09:00] WARN: *****************************************
+[2013-07-09T17:15:39+09:00] WARN: Did not find config file: /etc/chef/solo.rb, using command line options.
+[2013-07-09T17:15:39+09:00] WARN: *****************************************
+Starting Chef Client, version 11.4.0
+Compiling Cookbooks...
+Converging 0 resources
+Chef Client finished, 0 resources updated
+# which chef-solo
+/usr/bin/chef-solo</code></pre>
+
+<p>Chef 関連のモジュールは /opt/chef 配下にインストールされるので ls で閲覧してみてください。</p>
+
+<pre><code># ls /opt/chef/bin/
+chef-apply  chef-client  chef-shell  chef-solo  erubis  knife  ohai  restclient  shef</code></pre>
+
+<h2 id='2_chef_apply_'>2. Chef Apply を試す</h2>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='21_chef_apply_'>2.1. Chef Apply とは</h3>
+
+<p><code>chef</code> gem をインストールすると、<code>chef-apply</code> というコマンドもインストールされます。 <code>chef-solo</code> よりも手軽に Chef の「べき等性」が試せるので、少し触ってみましょう。</p>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='22_'>2.2. レシピの作成と実行</h3>
+
+<p>まずはかんたんなレシピを作成します。 ファイルを作成して中に &#8220;hello world&#8221; と書き込むだけのものです。</p>
+
+<pre><code># vi recipe.rb
+## 下記内容を書き込みます
+file &#39;/var/tmp/test.txt&#39; do
+  content &quot;hello, world\n&quot;
+end</code></pre>
+
+<p>実行してみます。</p>
+
+<pre><code># chef-apply recipe.rb
+Recipe: (chef-apply cookbook)::(chef-apply recipe)
+  * file[/var/tmp/test.txt] action create
+    - create new file /var/tmp/test.txt with content checksum 853ff9
+        --- /tmp/chef-tempfile20130709-856-1n2lyfc      2013-07-09 17:19:24.658237382 +0900
+        +++ /tmp/chef-diff20130709-856-1qjl5ez  2013-07-09 17:19:24.658237382 +0900
+        @@ -0,0 +1 @@
+        +hello, world</code></pre>
+
+<p>ファイルが作成されたようです。実際に確認してみます。</p>
+
+<pre><code># ls /var/tmp/test.txt
+/var/tmp/test.txt
+# cat /var/tmp/test.txt
+hello, world</code></pre>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='23_'>2.3. べき等性の確認</h3>
+
+<p>もう一度実行してみます。</p>
+
+<pre><code># chef-apply recipe.rb
+Recipe: (chef-apply cookbook)::(chef-apply recipe)
+  * file[/var/tmp/test.txt] action create (up to date)</code></pre>
+
+<p>今度は up to date と表示され何も起きません。これはサーバーがレシピに書かれた内容通りの状態になっていることを Chef が認識し、ファイル作成をスキップしたためです。</p>
+
+<p>このように「何度実行しても結果が同じになる」ような性質を Chef (や構成管理ツール) の世界では「<strong>idemponent (べき等)</strong>」と呼んでいます。</p>
+
+<p>次にわざと作成されたファイルを書き換えた上で実行してみましょう。</p>
+
+<pre><code># echo hello nifty cloud &gt; /var/tmp/test.txt
+# cat /var/tmp/test.txt
+hello nifty cloud
+# chef-apply recipe.rb
+Recipe: (chef-apply cookbook)::(chef-apply recipe)
+  * file[/var/tmp/test.txt] action create
+    - update content in file /var/tmp/test.txt from bac308 to 853ff9
+        --- /var/tmp/test.txt   2013-07-09 17:28:37.003242663 +0900
+        +++ /tmp/chef-diff20130709-2021-umd0np  2013-07-09 17:28:54.504237642 +0900
+        @@ -1 +1 @@
+        -hello nifty cloud
+        +hello, world</code></pre>
+
+<p>ファイルが書き換わったことを認識して Chef がレシピ通りの状態に復元してくれたことが確認できたと思います。</p>
+
+<p>今度は recipe.rb 自体のほうを書き換えた上で Chef 実行してみます。</p>
+
+<pre><code># vi recipe.rb
+## world を chef に書き換えた
+file &#39;/var/tmp/test.txt&#39; do
+  content &quot;hello, chef\n&quot;
+end
+# chef-apply recipe.rb
+Recipe: (chef-apply cookbook)::(chef-apply recipe)
+  * file[/var/tmp/test.txt] action create
+    - update content in file /var/tmp/test.txt from 853ff9 to 5b8079
+        --- /var/tmp/test.txt   2013-07-09 17:28:54.557365556 +0900
+        +++ /tmp/chef-diff20130709-2432-3waga3  2013-07-09 17:31:54.521237988 +0900
+        @@ -1 +1 @@
+        -hello, world
+        +hello, chef</code></pre>
+
+<p>この場合にもサーバーの状態がレシピに記述された状態とは異なるので変更が適用されます。</p>
+
+<p>このように、サーバーに変更が反映されるのは、下記の 2 つの場合のみです。</p>
+<ul>
+  <li>サーバーの状態がレシピと異なってしまった場合</li>
+  <li>レシピ自体が更新された場合</li>
+</ul>
+<h2 id='3_chef_solo__wordpress_'>3. Chef Solo で WordPress レシピ開発</h2>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='31_chef_solo_'>3.1. Chef Solo 用の設定ファイル配置</h3>
+
+<p>それでは簡易版ではなく、本格的な Cookbook をダウンロードして実行してみましょう。</p>
+
+<p>まずは準備として Chef Solo が cookbooks 置き場として利用するディレクトリを作成しておきます。</p>
+
+<pre><code>mkdir -p /var/chef/cookbooks</code></pre>
+
+<p>あと、少し煩雑ですがこの後の手順で knife cookbook site install コマンドを利用するために、/var/chef/cookbooks を git レポジトリにしておきます。</p>
+
+<pre><code>yum install -y git
+cd /var/chef/cookbooks
+git init .
+touch README
+git add README
+git commit -m &quot;add readme.&quot;</code></pre>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='32_wordpress_'>3.2. WordPress レシピのダウンロード</h3>
+
+<p>それでは、Opscode のコミュニティサイトから knife コマンドを利用して wordpress cookbook をダウンロードしましょう。</p>
+
+<p>下記のコマンドを実行します。</p>
+
+<pre><code># knife cookbook site install wordpress
+## wordpress および wordpress が依存</code></pre>
+
+<p>/var/chef/cookbooks を見てみると、いくつかの cookbooks がインストールされているのが分かります。</p>
+
+<pre><code># cd /var/chef/cookbooks
+# ls
+README  apache2  build-essential  mysql  openssl  php  wordpress  xml</code></pre>
+
+<p>自動でブランチも切られているので、オリジナルの cookbook との差分を確認しながら cookbook を開発することができます。</p>
+
+<pre><code># git branch
+  chef-vendor-apache2
+  chef-vendor-build-essential
+  chef-vendor-mysql
+  chef-vendor-openssl
+  chef-vendor-php
+  chef-vendor-wordpress
+  chef-vendor-xml</code></pre>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='33_'>3.3. レシピ実行</h3>
+
+<p>cookbooks が正常にダウンロードできたので、実行してみます。</p>
+
+<p>まずは設定ファイルを作成します。</p>
+
+<pre><code># vi dna.json
+## 下記の内容を書き込む
+{
+  &quot;run_list&quot;: [&quot;recipe[wordpress]&quot;],
+  &quot;mysql&quot;: {
+    &quot;server_root_password&quot;: &quot;password&quot;,
+    &quot;server_debian_password&quot;: &quot;password&quot;,
+    &quot;server_repl_password&quot;: &quot;password&quot;
+  }
+}</code></pre>
+
+<p>上記ファイルを指定して chef-solo を実行してみます。</p>
+
+<pre><code># chef-solo -j dna.json</code></pre>
+
+<p>ずらずらと Chef のログが流れはじめます。しばらくして下記のようなメッセージが表示されたら実行完了です。</p>
+
+<pre><code>## これより上のログは省略
+Recipe: apache2::default
+  * service[apache2] action restart
+    - restart service service[apache2]
+
+Recipe: wordpress::default
+  * log[wordpress_install_message] action write
+
+Chef Client finished, 109 resources updated</code></pre>
+
+<p>当日配布するグローバル IP アドレスをブラウザに張り付けてみましょう。</p>
+
+<p>WordPress のインストール画面が表示されたら成功です。</p>
+
+<h2 id='4_'>4. レシピのテストを書く</h2>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='41_serverspec_'>4.1. serverspec のインストール</h3>
+
+<p>せっかくなので、たった今行った動作確認の作業を今話題の serverspec で自動化してみましょう。</p>
+
+<p>まず <code>gem</code> コマンドでインストールするため、Chef Solo をインストールしたときについてきた gem にパスを通しておきます。</p>
+
+<pre><code># export PATH=$PATH:/opt/chef/embedded/bin/
+# gem -v
+1.8.24</code></pre>
+
+<p>serverspec をインストールします。</p>
+
+<pre><code># gem install serverspec</code></pre>
+
+<p><code>serverspec-init</code> というコマンドがインストールされます。</p>
+
+<p>このコマンドでテストのひな形を作ります。 backend type (SSH 経由でテストするかローカルでテストするか) を聞かれるので、今回は「2) Exec (local) 」を選択しましょう。</p>
+
+<p>(もちろんニフティクラウドのサーバーは SSH 経由でもテスト可能です。)</p>
+
+<pre><code># serverspec-init
+Select a backend type:
+
+  1) SSH
+  2) Exec (local)
+
+Select number: 2     ## 2 を入力
+
+ + spec/
+ + spec/localhost/
+ + spec/localhost/httpd_spec.rb
+ + spec/spec_helper.rb
+ + Rakefile</code></pre>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='42_httpd_'>4.2. httpd のテストを修正</h3>
+
+<p>この状態で <code>rake spec</code> コマンドを実行すると、デフォルトで作成された httpd のテストが失敗します。</p>
+
+<pre><code># rake spec
+/opt/chef/embedded/bin/ruby -S rspec spec/localhost/httpd_spec.rb
+.....F
+
+Failures:
+
+  1) File &quot;/etc/httpd/conf/httpd.conf&quot;
+     Failure/Error: it { should contain &quot;ServerName localhost&quot; }
+       grep -q -- ServerName\ localhost /etc/httpd/conf/httpd.conf
+       expected File &quot;/etc/httpd/conf/httpd.conf&quot; to contain &quot;ServerName localhost&quot;
+     # ./spec/localhost/httpd_spec.rb:18:in `block (2 levels) in &lt;top (required)&gt;&#39;
+
+Finished in 0.06117 seconds
+6 examples, 1 failure
+
+Failed examples:
+
+rspec ./spec/localhost/httpd_spec.rb:18 # File &quot;/etc/httpd/conf/httpd.conf&quot;
+rake aborted!
+/opt/chef/embedded/bin/ruby -S rspec spec/localhost/httpd_spec.rb failed
+
+Tasks: TOP =&gt; spec
+(See full trace by running task with --trace)</code></pre>
+
+<p>今回はドメイン取得は行わないので、ServerName のテストは削除しておきます。</p>
+
+<p>削除した上、rake spec で <code>F</code> が表示されなくなったら、次へ進みましょう。</p>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='43_mysqld_'>4.3. mysqld のテストを作成</h3>
+
+<p><code>httpd_spec.rb</code> を参考に、mysqld のテストを書いてみます。</p>
+
+<p>下記が確認できるようにしましょう。</p>
+<ul>
+  <li>mysql-server パッケージがインストールされていること</li>
+  <li>mysqld デーモンが有効化されていること (chkconfig mysqld on されていること)</li>
+  <li>mysqld デーモンが起動していること</li>
+  <li>3306 ポートが LISTEN していること</li>
+</ul>
+<pre><code># vi ./spec/localhost/mysqld_spec.rb</code></pre>
+
+<p>(回答例はこちら：<a href='https://gist.github.com/tily/5990140'>https://gist.github.com/tily/5990140</a>)</p>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='44_wordpress_'>4.4. wordpress のテストを作成</h3>
+
+<p>次に、<a href='http://serverspec.org/resource_types.html'>serverspec のドキュメント</a> を参照しながら、 下記を確認できるようにしてみます。</p>
+<ul>
+  <li>http://localhost/wp-admin/install.php にアクセスすると "Welcome to the famous five minute WordPress installation process!" という文字列が表示されること</li>
+</ul>
+<pre><code># vi ./spec/localhost/mysqld_spec.rb</code></pre>
+
+<p>(回答例はこちら：<a href='https://gist.github.com/tily/5990140'>https://gist.github.com/tily/5990140</a>)</p>
+
+<h2 id='5_cloudautomation__'>5. CloudAutomation β で自動化！</h2>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='51_'>5.1. レシピのアップロード</h3>
+
+<p>(ここからは API キーが必要な関係で講師のデモになります。)</p>
+
+<p>これまで作った cookbooks をニフティクラウドにアップロードします。</p>
+
+<p>例：<a href='https://some.ncss.nifty.com/cookbooks.tgz'>https://some.ncss.nifty.com/cookbooks.tgz</a></p>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='52_json_'>5.2. JSON ファイル作成</h3>
+
+<p>今回のハンズオンで使った dna.json をそのまま JSON テンプレートの中に指定することができます。</p>
+
+<pre><code>{
+  &quot;run_list&quot;: [
+      &quot;recipe[nc::dependency_resolver]&quot;,
+      &quot;recipe[nc::manager_store]&quot;,
+      &quot;recipe[nc::manager]&quot;
+  ],
+  &quot;nc&quot;: {
+    &quot;resource&quot;: {
+      &quot;security_group&quot;: [
+        {&quot;name&quot;: &quot;wordpressfw&quot;}
+      ],
+      &quot;security_group_ingress&quot;: [
+        {&quot;name&quot;: &quot;wordpressfw&quot;, &quot;from_port&quot;: 80, &quot;cidr_ip&quot;: &quot;0.0.0.0/0&quot;},
+        {&quot;name&quot;: &quot;wordpressfw&quot;, &quot;from_port&quot;: 22, &quot;cidr_ip&quot;: &quot;0.0.0.0/0&quot;}
+      ],
+      &quot;instance&quot;: [
+        {
+          &quot;instance_id&quot;   : &quot;wordpress&quot;,
+          &quot;image_id&quot;      : 26,
+          &quot;instance_type&quot; : &quot;mini&quot;,
+          &quot;security_group&quot;: &quot;wordpressfw&quot;,
+          &quot;key_name&quot;      : &quot;yoursshkey&quot;,
+          &quot;chef_solo&quot;: {
+            &quot;json_attributes&quot;: {
+              &quot;run_list&quot;:[&quot;recipe[wordpress]&quot;],
+              &quot;mysql&quot;: {
+                &quot;server_root_password&quot;  : &quot;password&quot;,
+                &quot;server_debian_password&quot;: &quot;password&quot;,
+                &quot;server_repl_password&quot;  : &quot;password&quot;
+              }
+            },
+            &quot;recipe_url&quot;: &quot;ここに cookbooks の URL を書く&quot;
+          }
+        }
+      ]
+    }
+  }
+}</code></pre>
+<div class='pull-right'><a href='#0_'>目次へ</a></div>
+<h3 id='53_'>5.3. コントロールパネルから実行</h3>
+
+<p>あとはコントロールパネルの「CloudAutomation β」機能から上記 JSON を実行するだけです。</p>
+<hr />
+<p>以上、ご参加ありがとうございました。</p>
+  </div>
+</div>
+
+
+      </div>
+      <hr>
+      <footer>
+        <p>&copy; 2013 Name Lastname
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
+
