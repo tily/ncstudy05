@@ -441,6 +441,7 @@ backend type (SSH 経由でテストするかローカルでテストするか) 
 
 * [Vagrant + Chef Solo + serverspec + Jenkins でサーバー構築を CI - naoyaのはてなダイアリー](http://d.hatena.ne.jp/naoya/20130520/1369054828)
 * [Vagrantからニフティクラウド上のサーバのprovisioningが実行できるvagrant-niftycloudを作った | Oreradio.memo](http://www.oreradio.com/2013/07/22.php)
+* [Chef のレシピから serverspec のテストを自動生成する chef-serverspec-handler という gem を作ってみた - DevOps について書くブログ](http://tily.hatenablog.com/entry/2013/07/21/150404)
 
 ## 5. CloudAutomation β で自動化！
 
