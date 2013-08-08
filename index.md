@@ -408,7 +408,7 @@ backend type (SSH 経由でテストするかローカルでテストするか) 
   <li>http://localhost/wp-admin/install.php にアクセスすると "Welcome to the famous five minute WordPress installation process!" という文字列が表示されること</li>
 </ul>
 
-    # vi ./spec/localhost/mysqld_spec.rb
+    # vi ./spec/localhost/wordpress_spec.rb
 
 (回答例はこちら：[https://gist.github.com/tily/5990140](https://gist.github.com/tily/5990140))
 
