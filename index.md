@@ -62,6 +62,8 @@ Chef Apply と Chef Solo と serverspec とニフティクラウドとニフテ�
 
 ### 1.1. SSH でサーバーへログイン
 
+#### Windows の場合
+
 <ol>
   <li> TeraTerm を起動</li>
   <li> 「ホスト」に当日配布の IP アドレスを入力</li>
@@ -75,7 +77,14 @@ Chef Apply と Chef Solo と serverspec とニフティクラウドとニフテ�
 
 下記のようなプロンプトが表示されればログイン成功です。
 
-    [root@devopschf001 ~]#
+    [root@localhost ~]#
+
+#### Mac OS X の場合
+
+通常の SSH ログインコマンドでログイン可能です。
+
+    ssh -i /path/to/ncstudy05_private.pem root@[グローバルIPアドレス]
+
 
 <div class="pull-right"><a href="#0_">目次へ</a></div>
 
