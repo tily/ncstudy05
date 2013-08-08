@@ -44,6 +44,7 @@ Chef Apply と Chef Solo と serverspec とニフティクラウドとニフテ�
       <li><a href="#42_httpd_">4.2. httpd のテストを修正</a></li>
       <li><a href="#43_mysqld_">4.3. mysql のテストを作成</a></li>
       <li><a href="#44_wordpress_">4.4. wordpress のテストを作成</a></li>
+      <li><a href="#45_">4.5. 進んだ使い方</a></li>
     </ul>
   </li>
   <li>
@@ -409,6 +410,37 @@ backend type (SSH 経由でテストするかローカルでテストするか) 
     # vi ./spec/localhost/mysqld_spec.rb
 
 (回答例はこちら：[https://gist.github.com/tily/5990140](https://gist.github.com/tily/5990140))
+
+<div class="pull-right"><a href="#0_">目次へ</a></div>
+
+### 4.5 進んだ使い方
+
+<strong>HTML 出力</strong>
+
+    # rake spec SPEC_OPTS="--format html"
+
+<strong>JUnit 形式の XML (Jenkins で利用可能) へ変換</strong>
+
+    # gem install ci_report
+
+    # vi Rakefile
+    ## 下記行を追加
+    require 'ci/reporter/rake/rspec'
+
+    rake ci:setup:rspec spec
+    ## spec/reports 配下に XML ファイルが生成される
+
+このような仕組みにより、こんな使い方をすることが可能。
+
+<ul>
+  <li>既存のサーバーで定期的に serverspec を実行し HTML 出力結果をメールで通知</li>
+  <li>Jenkins で定期的にニフティクラウドのサーバーを立ち上げ serverspec のテスト結果を出力</li>
+</ul>
+
+参考：
+
+* [Vagrant + Chef Solo + serverspec + Jenkins でサーバー構築を CI - naoyaのはてなダイアリー](http://d.hatena.ne.jp/naoya/20130520/1369054828)
+* [Vagrantからニフティクラウド上のサーバのprovisioningが実行できるvagrant-niftycloudを作った | Oreradio.memo](http://www.oreradio.com/2013/07/22.php)
 
 ## 5. CloudAutomation β で自動化！
 
