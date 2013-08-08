@@ -427,7 +427,7 @@ backend type (SSH 経由でテストするかローカルでテストするか) 
     ## 下記行を追加
     require 'ci/reporter/rake/rspec'
 
-    rake ci:setup:rspec spec
+    # rake ci:setup:rspec spec
     ## spec/reports 配下に XML ファイルが生成される
 
 このような仕組みにより、こんな使い方をすることが可能。
