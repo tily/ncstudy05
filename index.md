@@ -84,6 +84,7 @@ Chef Apply と Chef Solo と serverspec とニフティクラウドとニフテ�
 
 通常の SSH ログインコマンドでログイン可能です。
 
+    chmod 600 ncstudy05_private.pem
     ssh -i /path/to/ncstudy05_private.pem root@[グローバルIPアドレス]
 
 
