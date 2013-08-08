@@ -422,7 +422,7 @@ backend type (SSH 経由でテストするかローカルでテストするか) 
 
 <strong>JUnit 形式の XML (Jenkins で利用可能) へ変換</strong>
 
-    # gem install ci_report
+    # gem install ci_reporter
 
     # vi Rakefile
     ## 下記行を追加
